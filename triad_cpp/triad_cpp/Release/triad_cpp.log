@@ -1,0 +1,14 @@
+﻿  main.cpp
+c1xx : warning C4199: two-phase name lookup is not supported for C++/CLI, C++/CX, or OpenMP; use /Zc:twoPhase-
+c:\users\ga53zeg\source\repos\triad_cpp\triad_cpp\main.cpp(10): warning C4244: 'initializing': conversion from 'double' to 'const int', possible loss of data
+  triad_algo.cpp
+c1xx : warning C4199: two-phase name lookup is not supported for C++/CLI, C++/CX, or OpenMP; use /Zc:twoPhase-
+c:\users\ga53zeg\source\repos\triad_cpp\triad_cpp\triad_algo.cpp(13): warning C4018: '<': signed/unsigned mismatch
+  triad_naive.cpp
+c1xx : warning C4199: two-phase name lookup is not supported for C++/CLI, C++/CX, or OpenMP; use /Zc:twoPhase-
+  Generating code
+  0 of 77 functions ( 0.0%) were compiled, the rest were copied from previous compilation.
+    0 functions were new in current compilation
+    0 functions had inline decision re-evaluated but remain unchanged
+  Finished generating code
+  triad_cpp.vcxproj -> C:\Users\ga53zeg\source\repos\triad_cpp\Release\triad_cpp.exe
