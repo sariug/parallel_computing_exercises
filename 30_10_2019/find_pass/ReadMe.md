@@ -5,4 +5,4 @@ Possible (self) improvements:
 
 - Adding "Command Line Interface" to actually enter - pass , - max pass.
 - Adding a reader to read a bin file that contains a pass.
-- Adding time functions to work see how much time change with respect to number of threads.
+- Adding time functions to see how much time change with respect to number of threads.
