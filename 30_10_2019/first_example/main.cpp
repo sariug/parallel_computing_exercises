@@ -8,7 +8,6 @@
 void thread(int i)
 {
 	std::cout <<"thread :" << i <<" says hello\n";
-	std::this_thread::sleep_for(std::chrono::seconds(1));
 }
 
 
