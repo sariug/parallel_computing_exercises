@@ -11,6 +11,6 @@ elseif (CMAKE_CXX_COMPILER_ID STREQUAL "Intel")
    set (CMAKE_CXX_FLAGS "-std=c++11 -lpthread -O0 ")
 endif()
 
-add_subdirectory(first_example)
+
 add_subdirectory(find_pass)
 add_subdirectory(hello_world_threads)
