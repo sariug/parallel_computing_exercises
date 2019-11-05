@@ -43,7 +43,7 @@ int main()
     std::cin >> size;
 
     //randomizedTest(static_cast<size_t>(size));
-    
+      
     int numberOfThreads = 6;
 
     int chunk = size / 6;
