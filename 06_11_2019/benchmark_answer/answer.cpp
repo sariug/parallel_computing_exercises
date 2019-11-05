@@ -39,7 +39,7 @@ void randomizedTest2( size_t );
 int main()
 {
     int size;
-    
+    std::cout<<"Please enter the length of the array: ";
     std::cin >> size;
 
     //randomizedTest(static_cast<size_t>(size));
@@ -76,18 +76,18 @@ int main()
     for(auto& thread : threads ) thread.join();
     threads.clear();
 
-
+    std::cout <<"\nCalculated value with my function : ";
     std::cout << std::sqrt(std::accumulate(sums.begin(), sums.end(), 0.0) )<<'\n';
     auto end = std::chrono::high_resolution_clock::now();
     std::chrono::duration<double,std::milli> duration = end - start;
-    std::cout <<"threaded took " << duration.count() << " ms\n";
+    std::cout <<"Test using threads took " << duration.count() << " ms\n";
 
-    std::cout <<"ref : \n";
+    std::cout <<"\nReference value : ";
     start = std::chrono::high_resolution_clock::now();
     std::cout <<std::sqrt(std::inner_product(A, A+size, B, 0.0) );
     end = std::chrono::high_resolution_clock::now();
     duration = end - start;
-    std::cout <<"Ref took " << duration.count() << " ms\n";
+    std::cout <<"\nReference test took " << duration.count() << " ms\n";
     return 0;
 
 }
@@ -112,17 +112,17 @@ void randomizedTest( size_t my_size)
     auto end = std::chrono::high_resolution_clock::now();
     std::chrono::duration<double,std::milli> duration = end - start;
     double mflopSeconds = (2*my_size)* 1e-6 / (duration.count() * 1e-3) ;
+    std::cout <<"\nCalculated value with my function : " << normAns << '\n';
     std::cout <<"Test took " << duration.count() << " ms\n";
     std::cout <<"MFLOP/s " << mflopSeconds<<'\n';
-    std::cout <<"answer: " << normAns << '\n';
+
     start = std::chrono::high_resolution_clock::now();
     normAns =  std::sqrt( std::inner_product(A,A+my_size, B,0.0)); 
     end = std::chrono::high_resolution_clock::now();
     duration = end - start;
     mflopSeconds = (2*my_size)* 1e-6 / (duration.count() * 1e-3) ;
-    std::cout << "reference\n";
+    std::cout <<"\nReference value : "<< normAns << '\n';
     std::cout <<"Test took " << duration.count() << " ms\n";
-    std::cout <<"answer: " << normAns << '\n';
     std::cout <<"MFLOP/s " << mflopSeconds<<'\n';
 
 }
