@@ -1,7 +1,7 @@
 /*
 	A simple program to find a number using threads library.
 
-	Author: Uğurcan Sarı, Oğuz Öztoprak
+	Author: Uğurcan Sarı, Oguz Oztoprak
 	Date : 30.10.2019
 
 */
