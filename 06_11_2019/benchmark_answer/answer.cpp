@@ -7,6 +7,7 @@
 #include <algorithm>
 #include <string>
 #include <thread>
+#include <numeric>
 
 
 // Fill
@@ -35,9 +36,11 @@ void normThread(double* A, double* B,  int size, int start, int end, double& sum
 
 void randomizedTest( size_t );
 void randomizedTest2( size_t );
-int main(int argc, char** argv)
+int main()
 {
-    int size = std::stoi(argv[1]); 
+    int size;
+    
+    std::cin >> size;
 
     //randomizedTest(static_cast<size_t>(size));
     
