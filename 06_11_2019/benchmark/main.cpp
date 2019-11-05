@@ -27,6 +27,7 @@ void test( );
 int main( )
 {
     int size;
+    std::cout<<"Please enter the length of the array: ";
     std::cin >> size;
 
     // generate your arrays in heap ( new double[size] )
