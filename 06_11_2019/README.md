@@ -21,3 +21,7 @@
 6 - Do second and third assignments for the parallelized script. 
 
 7 - Compare parallel to no-parallel speed (in terms of milliseconds) with respect to number of threads and size of the array used. 
+
+
+## Prize
+The author of the best scaled function earns a **BEER** !
