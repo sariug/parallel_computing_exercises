@@ -16,10 +16,12 @@ class Matrix
         Matrix( );
         Matrix( int nRows, int nCols );
 
-        size_t numberOfCols( );
-        size_t numberOfRows( );
+        size_t numberOfCols( ) const;
+        size_t numberOfRows( ) const;
 
         double& operator()(int x, int y);
+	
+	const double& operator()(int x, int y) const;
 
 
     private:
