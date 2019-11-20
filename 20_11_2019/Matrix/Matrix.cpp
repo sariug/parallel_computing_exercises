@@ -1,7 +1,11 @@
 #include "Matrix.hpp"
+/*
+    A simple Matrix class and Utils to manipulate matrices.
 
+	Author: Uğurcan Sarı, Oguz Oztoprak
+	Date : 20.11.2019
 
-
+*/
 Matrix::Matrix()
 {
     m_matrix = std::vector<std::vector<double>>(3,{0.,0.,0.});

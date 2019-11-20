@@ -2,7 +2,13 @@
 #define __MATRIX_UTILS_HPP__
 
 #include "Matrix.hpp"
+/*
+    A simple Matrix class and Utils to manipulate matrices.
 
+	Author: Uğurcan Sarı, Oguz Oztoprak
+	Date : 20.11.2019
+
+*/
 namespace matrixUtilities
 {
     Matrix matrixSum( const Matrix& m1, const Matrix& m2);

@@ -1,6 +1,12 @@
 #ifndef __MATRIX_HPP__
 #define __MATRIX_HPP__
+/*
+    A simple Matrix class and Utils to manipulate matrices.
 
+	Author: Uğurcan Sarı, Oguz Oztoprak
+	Date : 20.11.2019
+
+*/
 #include <iostream>
 #include <vector>
 
