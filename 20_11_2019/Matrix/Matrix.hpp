@@ -15,15 +15,16 @@ class Matrix
     public:
         Matrix( );
         Matrix( int nRows, int nCols );
+		void input_matrix();
 
         size_t numberOfCols( ) const;
         size_t numberOfRows( ) const;
 
         double& operator()(int x, int y);
-	
+		Matrix& operator + (Matrix& mat_1);
+		Matrix& operator *(Matrix& mat_1);
 	const double& operator()(int x, int y) const;
-
-
+	friend std::ostream& operator<<(std::ostream &os, Matrix& mat_1);
     private:
         std::vector< std::vector< double > > m_matrix;
 };
