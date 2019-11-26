@@ -9,6 +9,7 @@
 */
 #include <iostream>
 #include <vector>
+#include <limits>
 
 class Matrix
 {
@@ -21,10 +22,12 @@ class Matrix
         size_t numberOfRows( ) const;
 
         double& operator()(int x, int y);
+        friend bool operator==(const Matrix& lhs, const Matrix& rhs);
 		Matrix& operator + (Matrix& mat_1);
 		Matrix& operator *(Matrix& mat_1);
-	const double& operator()(int x, int y) const;
-	friend std::ostream& operator<<(std::ostream &os, Matrix& mat_1);
+
+	    const double& operator()(int x, int y) const;
+	    friend std::ostream& operator<<(std::ostream &os, Matrix& mat_1);
     private:
         std::vector< std::vector< double > > m_matrix;
 };

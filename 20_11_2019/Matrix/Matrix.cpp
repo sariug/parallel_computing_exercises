@@ -16,6 +16,22 @@ Matrix::Matrix(int nRows, int nCols )
     m_matrix = std::vector<std::vector<double>>(nRows, std::vector<double>(nCols, 0.0));
 }
 
+bool operator==( const Matrix& lhs, const Matrix& rhs)
+{
+    size_t number_of_rows = rhs.numberOfRows( );
+    size_t number_of_cols = rhs.numberOfCols( );
+
+    for ( size_t i = 0 ;  i < number_of_rows ; ++i )
+    {
+        for ( size_t j = 0 ;  j < number_of_cols ; ++j )
+        {
+            if ( std::abs( lhs( i, j ) - rhs ( i, j ) ) > std::numeric_limits<double>::epsilon()  ) return false; 
+        }
+    }
+    return true;
+
+}
+
 void Matrix::input_matrix()
 {
 	for (size_t i = 0; i < numberOfRows(); ++i)
@@ -82,13 +98,13 @@ Matrix & Matrix::operator+(Matrix & mat_1)
 	return mat_1;
 }
 
-std::ostream & operator<<(std::ostream & os, Matrix & mat_1)
+std::ostream& operator<<(std::ostream & os, Matrix & mat_1)
 {
 	for (size_t i = 0; i < mat_1.numberOfRows(); ++i)
 	{
 		os << std::endl;
 		for (size_t j = 0; j < mat_1.numberOfCols(); ++j)
-			os << mat_1.operator()(i, j) << " ";
+			os << mat_1(i, j) << " ";
 		
 	}
 	

@@ -42,8 +42,6 @@ namespace matrixUtilities
     {
 
 
-
-
 		Matrix A = m1;
 		Matrix B = m2;
 		check(A, B);
@@ -62,7 +60,6 @@ namespace matrixUtilities
 		}
 		int chunk = size_1 / numberOfThreads;
 		// start timer
-		auto start = std::chrono::high_resolution_clock::now();
 		std::vector<std::thread> threads;
 
 		// Each Thread gets a specific chunk of the arrays, does the calculation and stores in it sums[i].
@@ -84,9 +81,6 @@ namespace matrixUtilities
 		// After joining threads we can safely delete the threads, the answer we want is stored inside sums.
 		threads.clear();
 
-		auto end = std::chrono::high_resolution_clock::now();
-		std::chrono::duration<double, std::milli> duration = end - start;
-		std::cout << "Test using threads took " << duration.count() << " ms\n";
 		return sum;
 
     }
@@ -150,7 +144,6 @@ namespace matrixUtilities
 		}
 		int chunk = size_1 / numberOfThreads;
 		// start timer
-		auto start = std::chrono::high_resolution_clock::now();
 		std::vector<std::thread> threads;
 
 		// Each Thread gets a specific chunk of the arrays, does the calculation and stores in it sums[i].
@@ -172,16 +165,12 @@ namespace matrixUtilities
 		// After joining threads we can safely delete the threads, the answer we want is stored inside sums.
 		threads.clear();
 
-		auto end = std::chrono::high_resolution_clock::now();
-		std::chrono::duration<double, std::milli> duration = end - start;
-		std::cout << "Test using threads took " << duration.count() << " ms\n";
 		return product;
 
 
     }
 
 	void productThread(Matrix& m1, Matrix& m2, int begin, int end, int other_dim, Matrix &m3)
-
 	{
 		for (size_t i = begin; i < end; i++)
 			for (size_t j = 0; j < other_dim; j++)
