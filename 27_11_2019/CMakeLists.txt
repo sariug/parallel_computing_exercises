@@ -12,4 +12,4 @@ elseif (CMAKE_CXX_COMPILER_ID STREQUAL "Intel")
 endif()
 
 
-add_subdirectory(Matrix)
+add_subdirectory(SimpleImageProcessing)

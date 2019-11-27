@@ -25,6 +25,11 @@ namespace implementation
         ifstream iftest;
         string newlin;
         iftest.open(filnam, ios::in);
+        if(!iftest.is_open())
+        {
+            std::cout<<filnam<<" does not exist.Quitting."<<std::endl;
+            exit(400);
+        }
         int header_size = 3;
 
         for (int i = 0; i < 4; i++)
