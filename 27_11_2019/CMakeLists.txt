@@ -1,5 +1,5 @@
 cmake_minimum_required( VERSION 3.4.3 )
-project(fourth_week)
+project(fifth_week)
 
 if (CMAKE_CXX_COMPILER_ID STREQUAL "Clang")
     set (CMAKE_CXX_FLAGS "-std=c++11 -pthread -stdlib=libstdc++ -O0 ")
