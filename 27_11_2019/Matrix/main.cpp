@@ -8,10 +8,9 @@
 
 */
 
-
 int main()
 {
-auto m = imageProcessing::read_image("l.pgm");
-imageProcessing::write_image("m.pgm", m);
-return 0;
+    auto m = imageProcessing::read_image("l.pgm");
+    imageProcessing::write_image("m.pgm", m);
+    return 0;
 }
