@@ -355,32 +355,18 @@ void test()
 		{
 			assert(dummy(i, j) == 1);
 		}
-
-	for (int m = 0; m < 5; ++m)
+	for (int i = 0; i < dummy.numberOfCols(); ++i)
 	{
-		assert(dummy(0, m) == 0.0);
-	}
-	for (int i = 0; i < 5; ++i)
-	{
+		assert(dummy(0, i) == 0.0);
 		assert(dummy(3, i) == 0.0);
 	}
-	for (int i = 0; i < 4; ++i)
+	for (int i = 0; i < dummy.numberOfRows(); ++i)
 	{
 		assert(dummy(i, 0) == 0.0);
-	}
-	for (int i = 0; i < 4; ++i)
-	{
 		assert(dummy(i, 4) == 0.0);
 	}
 
-	Matrix inp(3, 3, 0);
-	inp(0, 2) = 8;
-	inp(1, 0) = 4;
-	inp(2, 0) = 2;
-	inp(1, 1) = -2;
-	inp(2, 1) = 3;
-	inp(1, 2) = 6;
-	inp(2, 2) = 1;
+	Matrix inp({{0,0,8},{4,-2,6},{2,3,1}});
 	double test_mask[9] = {1,0,1,-1,1,1,1,1,1};
 	double a = CalculateConvolution(inp, test_mask, 1, 1);
 	assert(a == 7.0);
@@ -392,27 +378,11 @@ void test()
 	Matrix benchmark_result({{2,16,12},{7, 22,16},{7,14,8}});
 	
 	assert(result == benchmark_result);
-	// assert(result(0, 0) == 2);
-	// assert(result(0, 1) == 16);
-	// assert(result(0, 2) == 12);
-	// assert(result(1, 0) == 7);
-	// assert(result(1, 1) == 22);
-	// assert(result(1, 2) == 16);
-	// assert(result(2, 0) == 7);
-	// assert(result(2, 1) == 14);
-	// assert(result(2, 2) == 8);
 
 	Matrix result_1 = row_wise_parallel_masked_image_generator(inp, test_mask2, 2);
 	//Matrix result_1 = column_wise_parallel_masked_image_generator(inp, on, 2);
 	//Matrix result_1 = cross_wise_parallel_masked_image_generator(inp, on, 2);
-	assert(result_1(0, 0) == 2);
-	assert(result_1(0, 1) == 16);
-	assert(result_1(0, 2) == 12);
-	assert(result_1(1, 0) == 7);
-	assert(result_1(1, 1) == 22);
-	assert(result_1(1, 2) == 16);
-	assert(result_1(2, 0) == 7);
-	assert(result_1(2, 1) == 14);
-	assert(result_1(2, 2) == 8);
+	assert(result_1 == benchmark_result);
+
 
 }
