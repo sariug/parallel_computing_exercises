@@ -1,15 +1,6 @@
 #include "ppImageUtils.hpp"
 using namespace std;
 
-
-
-
-void check(Matrix &input)
-{
-	if (input.numberOfCols() < 3 || input.numberOfRows() < 3)
-		throw std::runtime_error("Minimum rows or columns should be 3, check input matrix");
-}
-
 Matrix masked_image_generator(Matrix & input, double *mask)
 {
 	Matrix res(input.numberOfRows() - 2, input.numberOfCols() - 2, 0);
@@ -19,9 +10,6 @@ Matrix masked_image_generator(Matrix & input, double *mask)
 		{
 			res(i - 1, j - 1) = CalculateConvolution(input, mask, i, j);
 		}
-
-
-
 	return res;
 
 }
@@ -64,6 +52,158 @@ void write_image(std::string filename, const Matrix & img)
     implementation::write_pgm_image(filename.c_str(),img);           /*Writing the PGM in Binary (P5) format*/
 }
 }
+
+
+
+
+
+
+Matrix row_wise_parallel_masked_image_generator(Matrix & input, double *mask, int number_of_threads)
+{
+
+	if (number_of_threads > input.numberOfRows() - 3)
+	{
+		throw std::runtime_error("!!!The number of threads shouldn't exceed the number of rows");
+	}
+
+
+	int size_1 = input.numberOfRows() - 2;
+	int size_2 = input.numberOfCols() - 2;
+	int numberOfThreads = number_of_threads;
+	int chunk = size_1 / numberOfThreads;
+	std::vector<std::thread> threads;
+	Matrix A = input;
+	Matrix result(input.numberOfRows() - 2, input.numberOfCols() - 2);
+	for (int i = 0; i < numberOfThreads - 1; ++i)
+	{
+		// At each iteration, we create a new thread who gets a function to compute and store the thread in threads vector.
+		threads.emplace_back(threadwise_masking, std::ref(A), std::ref(mask), chunk*i, chunk * (i + 1), size_2, std::ref(result));
+	}
+
+	// Main thread does the last chunk until the end of the arrays.
+	threadwise_masking(A,mask, (numberOfThreads - 1)*chunk, size_1, size_2, result);
+
+	for (auto& thread : threads) thread.join();
+
+	// After joining threads we can safely delete the threads, the answer we want is stored inside sums.
+	threads.clear();
+
+	return result;
+
+}
+
+Matrix column_wise_parallel_masked_image_generator(Matrix & input, double *mask, int number_of_threads)
+{
+
+	if (number_of_threads > input.numberOfCols() - 3)
+	{
+		throw std::runtime_error("!!!The number of threads shouldn't exceed the number of columns");
+	}
+
+
+	int size_1 = input.numberOfRows() - 2;
+	int size_2 = input.numberOfCols() - 2;
+	int numberOfThreads = number_of_threads;
+	int chunk = size_2 / numberOfThreads;
+	std::vector<std::thread> threads;
+	Matrix A = input;
+	Matrix result(input.numberOfRows() - 2, input.numberOfCols() - 2);
+	for (int i = 0; i < numberOfThreads - 1; ++i)
+	{
+		// At each iteration, we create a new thread who gets a function to compute and store the thread in threads vector.
+		threads.emplace_back(threadwise_masking, std::ref(A), std::ref(mask), chunk*i, chunk * (i + 1), size_1, std::ref(result));
+		std::cout << result;
+	}
+
+	// Main thread does the last chunk until the end of the arrays.
+	threadwise_masking(A, mask, (numberOfThreads - 1)*chunk, size_2, size_1, result);
+	std::cout << result;
+	for (auto& thread : threads) thread.join();
+
+	// After joining threads we can safely delete the threads, the answer we want is stored inside sums.
+	threads.clear();
+
+	return result;
+
+}
+
+Matrix cross_wise_parallel_masked_image_generator(Matrix & input, double *mask, int number_of_threads)
+{
+
+	if (number_of_threads > input.numberOfRows() + input.numberOfCols() - 6)
+	{
+		throw std::runtime_error("!!!The number of threads shouldn't exceed the number of rows or columns");
+	}
+	double ratio, numberOfThreadsR, numberOfThreadsC;
+	double rows = input.numberOfRows() - 2;
+	double cols = input.numberOfCols() - 2;
+
+
+	//Dividing threads among rows and columns
+
+	ratio = rows / (rows + cols);
+	numberOfThreadsR = number_of_threads * ratio;
+	numberOfThreadsC = number_of_threads * (1 - ratio);
+	int size_1 = input.numberOfRows() - 2;
+	int size_2 = input.numberOfCols() - 2;
+	int numberOfThreads = numberOfThreadsR + numberOfThreadsC;
+	int chunk_row = size_1 / numberOfThreadsR;
+	int chunk_col = size_2 / numberOfThreadsC;
+	std::vector<std::thread> threads;
+	Matrix A = input;
+	Matrix result(input.numberOfRows() - 2, input.numberOfCols() - 2);
+	for (int i = 0; i < numberOfThreadsR - 1; i++)
+	{
+		for (int j = 0; j < numberOfThreadsC - 1; j++)
+		{
+			// At each iteration, we create a new thread who gets a function to compute and store the thread in threads vector.
+			threads.emplace_back(threadwise_masking_cross, std::ref(A), std::ref(mask), chunk_row*i, chunk_row * (i + 1), chunk_col*j, chunk_col * (j + 1), std::ref(result));
+		}
+		threadwise_masking_cross(A, mask, chunk_row*i, chunk_row * (i + 1), (numberOfThreadsC - 1)*chunk_col, size_2, result);
+	}
+	threadwise_masking_cross(A, mask, numberOfThreadsR - 1, size_1, 0, size_2, result);
+
+	// Main thread does the last chunk until the end of the arrays.
+
+
+	for (auto& thread : threads) thread.join();
+
+	// After joining threads we can safely delete the threads, the answer we want is stored inside sums.
+	threads.clear();
+
+	return result;
+
+}
+
+void threadwise_masking(Matrix & input, double *mask, int begin, int end, int other_dim, Matrix & result)
+{
+
+	for (int i = begin; i < end; i++)
+		for (int j = 0; j < other_dim; j++)
+			result(i, j) = CalculateConvolution(input, mask, i + 1, j + 1);
+
+}
+
+void threadwise_masking_cross(Matrix & input, double *mask, int begin, int end, int begin_other, int end_other, Matrix & result)
+{
+
+	for (int i = begin; i < end; i++)
+		for (int j = begin_other; j < end_other; j++)
+			result(i, j) = CalculateConvolution(input, mask, i + 1, j + 1);
+
+
+
+}
+
+
+namespace imageProcessing::masks
+{
+double blur[9] = {1 / 9., 1 / 9., 1 / 9., 1 / 9., 1 / 9., 1 / 9., 1 / 9., 1 / 9., 1 / 9.};
+double edge_detection[9] = {-1, -1, -1, -1, 8, -1, -1, -1, -1};
+double sharpen[9] = {0, -1, 0, -1, 5, -1, 0, -1, 0};
+} // namespace imageProcessing::masks
+
+
 
 
 /* Implementations of reader and writer*/
@@ -287,150 +427,3 @@ void test()
 	assert(result_1(2, 2) == 8);
 
 }
-
-
-
-Matrix row_wise_parallel_masked_image_generator(Matrix & input, double *mask, int number_of_threads)
-{
-
-	if (number_of_threads > input.numberOfRows() - 3)
-	{
-		throw std::runtime_error("!!!The number of threads shouldn't exceed the number of rows");
-	}
-
-
-	int size_1 = input.numberOfRows() - 2;
-	int size_2 = input.numberOfCols() - 2;
-	int numberOfThreads = number_of_threads;
-	int chunk = size_1 / numberOfThreads;
-	std::vector<std::thread> threads;
-	Matrix A = input;
-	Matrix result(input.numberOfRows() - 2, input.numberOfCols() - 2);
-	for (int i = 0; i < numberOfThreads - 1; ++i)
-	{
-		// At each iteration, we create a new thread who gets a function to compute and store the thread in threads vector.
-		threads.emplace_back(threadwise_masking, std::ref(A), std::ref(mask), chunk*i, chunk * (i + 1), size_2, std::ref(result));
-	}
-
-	// Main thread does the last chunk until the end of the arrays.
-	threadwise_masking(A,mask, (numberOfThreads - 1)*chunk, size_1, size_2, result);
-
-	for (auto& thread : threads) thread.join();
-
-	// After joining threads we can safely delete the threads, the answer we want is stored inside sums.
-	threads.clear();
-
-	return result;
-
-}
-
-Matrix column_wise_parallel_masked_image_generator(Matrix & input, double *mask, int number_of_threads)
-{
-
-	if (number_of_threads > input.numberOfCols() - 3)
-	{
-		throw std::runtime_error("!!!The number of threads shouldn't exceed the number of columns");
-	}
-
-
-	int size_1 = input.numberOfRows() - 2;
-	int size_2 = input.numberOfCols() - 2;
-	int numberOfThreads = number_of_threads;
-	int chunk = size_2 / numberOfThreads;
-	std::vector<std::thread> threads;
-	Matrix A = input;
-	Matrix result(input.numberOfRows() - 2, input.numberOfCols() - 2);
-	for (int i = 0; i < numberOfThreads - 1; ++i)
-	{
-		// At each iteration, we create a new thread who gets a function to compute and store the thread in threads vector.
-		threads.emplace_back(threadwise_masking, std::ref(A), std::ref(mask), chunk*i, chunk * (i + 1), size_1, std::ref(result));
-		std::cout << result;
-	}
-
-	// Main thread does the last chunk until the end of the arrays.
-	threadwise_masking(A, mask, (numberOfThreads - 1)*chunk, size_2, size_1, result);
-	std::cout << result;
-	for (auto& thread : threads) thread.join();
-
-	// After joining threads we can safely delete the threads, the answer we want is stored inside sums.
-	threads.clear();
-
-	return result;
-
-}
-
-Matrix cross_wise_parallel_masked_image_generator(Matrix & input, double *mask, int number_of_threads)
-{
-
-	if (number_of_threads > input.numberOfRows() + input.numberOfCols() - 6)
-	{
-		throw std::runtime_error("!!!The number of threads shouldn't exceed the number of rows or columns");
-	}
-	double ratio, numberOfThreadsR, numberOfThreadsC;
-	double rows = input.numberOfRows() - 2;
-	double cols = input.numberOfCols() - 2;
-
-
-	//Dividing threads among rows and columns
-
-	ratio = rows / (rows + cols);
-	numberOfThreadsR = number_of_threads * ratio;
-	numberOfThreadsC = number_of_threads * (1 - ratio);
-	int size_1 = input.numberOfRows() - 2;
-	int size_2 = input.numberOfCols() - 2;
-	int numberOfThreads = numberOfThreadsR + numberOfThreadsC;
-	int chunk_row = size_1 / numberOfThreadsR;
-	int chunk_col = size_2 / numberOfThreadsC;
-	std::vector<std::thread> threads;
-	Matrix A = input;
-	Matrix result(input.numberOfRows() - 2, input.numberOfCols() - 2);
-	for (int i = 0; i < numberOfThreadsR - 1; i++)
-	{
-		for (int j = 0; j < numberOfThreadsC - 1; j++)
-		{
-			// At each iteration, we create a new thread who gets a function to compute and store the thread in threads vector.
-			threads.emplace_back(threadwise_masking_cross, std::ref(A), std::ref(mask), chunk_row*i, chunk_row * (i + 1), chunk_col*j, chunk_col * (j + 1), std::ref(result));
-		}
-		threadwise_masking_cross(A, mask, chunk_row*i, chunk_row * (i + 1), (numberOfThreadsC - 1)*chunk_col, size_2, result);
-	}
-	threadwise_masking_cross(A, mask, numberOfThreadsR - 1, size_1, 0, size_2, result);
-
-	// Main thread does the last chunk until the end of the arrays.
-
-
-	for (auto& thread : threads) thread.join();
-
-	// After joining threads we can safely delete the threads, the answer we want is stored inside sums.
-	threads.clear();
-
-	return result;
-
-}
-
-void threadwise_masking(Matrix & input, double *mask, int begin, int end, int other_dim, Matrix & result)
-{
-
-	for (int i = begin; i < end; i++)
-		for (int j = 0; j < other_dim; j++)
-			result(i, j) = CalculateConvolution(input, mask, i + 1, j + 1);
-
-}
-
-void threadwise_masking_cross(Matrix & input, double *mask, int begin, int end, int begin_other, int end_other, Matrix & result)
-{
-
-	for (int i = begin; i < end; i++)
-		for (int j = begin_other; j < end_other; j++)
-			result(i, j) = CalculateConvolution(input, mask, i + 1, j + 1);
-
-
-
-}
-
-
-namespace imageProcessing::masks
-{
-double blur[9] = {1 / 9., 1 / 9., 1 / 9., 1 / 9., 1 / 9., 1 / 9., 1 / 9., 1 / 9., 1 / 9.};
-double edge_detection[9] = {-1, -1, -1, -1, 8, -1, -1, -1, -1};
-double sharpen[9] = {0, -1, 0, -1, 5, -1, 0, -1, 0};
-} // namespace imageProcessing::masks

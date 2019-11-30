@@ -11,6 +11,7 @@
 #include <vector>
 #include <algorithm>
 #include <limits>
+#include <stdexcept>
 
 class Matrix
 {
@@ -31,6 +32,10 @@ public:
     Matrix &operator*(Matrix &mat_1);
     std::vector<double> &operator[](int index);
     const double &operator()(int x, int y) const;
+
+    // Check functions
+    bool checkMinimumNumOfRowsAndCols(int);
+
     friend std::ostream &operator<<(std::ostream &os, Matrix &mat_1);
 
 private:

@@ -25,7 +25,7 @@ int main()
 	auto size_rows = m.numberOfRows();
 	std::cout << size_rows << "\n";
 	auto size_col = m.numberOfCols();
-	check(m);
+	m.checkMinimumNumOfRowsAndCols(3);
 		//!!!NECESSARY TO INCREASE THE MATRIX SIZE TO GET APPROPRIATE RESULT
 	// Also can call increase inside every function, can be done as pleased
 	increase(m);

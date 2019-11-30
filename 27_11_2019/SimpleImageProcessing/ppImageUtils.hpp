@@ -44,7 +44,6 @@ Matrix column_wise_parallel_masked_image_generator(Matrix &input, double *mask, 
 Matrix cross_wise_parallel_masked_image_generator(Matrix &input, double *mask, int number_of_threads);
 void threadwise_masking(Matrix &input, double *mask, int begin, int end, int other_dim, Matrix &result);
 void threadwise_masking_cross(Matrix &input, double *mask, int begin, int end, int begin_other, int end_other, Matrix &result);
-void check(Matrix &input);
 Matrix masked_image_generator(Matrix &input, double *mask);
 double CalculateConvolution(Matrix &input, double *mask, int i, int j);
 void increase(Matrix &input);

@@ -119,3 +119,9 @@ std::vector<double> &Matrix::operator[](int index)
 {
 	return m_matrix[index];
 }
+
+bool Matrix::checkMinimumNumOfRowsAndCols(int n)
+{
+	if (this->numberOfCols() < n || this->numberOfRows() < n)
+		throw std::runtime_error("Minimum rows or columns should be %d"+std::to_string(n)+", check input matrix");
+}
