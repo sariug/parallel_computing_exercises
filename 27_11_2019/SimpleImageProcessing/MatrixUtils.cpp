@@ -166,4 +166,14 @@ void productThread(Matrix &m1, Matrix &m2, int begin, int end, int other_dim, Ma
 		for (size_t j = 0; j < other_dim; j++)
 			m3(i, j) = m1(i, j) * m2(i, j);
 }
+void pad(Matrix & m,int step, double value)
+{
+	// Can we make something better here ?
+	Matrix dummy(m.numberOfRows() + 2*step, m.numberOfCols() + 2*step, value);
+	for (int i = 0; i < m.numberOfRows(); ++i)
+		for (int j = 0; j < m.numberOfCols(); ++j)
+			dummy(i + step, j + step) = m(i, j);
+
+	m = dummy;
+}
 } // namespace matrixUtilities

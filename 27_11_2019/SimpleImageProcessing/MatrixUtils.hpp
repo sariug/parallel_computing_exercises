@@ -15,6 +15,7 @@ namespace matrixUtilities
     Matrix matrixSumParallel( const Matrix& m1, const Matrix& m2, int numberOfThreads);
     Matrix entryWiseProduct( const Matrix& m1, const Matrix& m2);
     Matrix entryWiseProductParallel( const Matrix& m1, const Matrix& m2, int numberOfThreads);
+	void pad(Matrix & m,int step=1, double value=0.0);
 	void productThread(Matrix & m1, Matrix & m2, int begin, int end, int other_dim, Matrix & m3);
 	void check(const Matrix& m1, const Matrix& m2);
 	void sumThread(Matrix & m1, Matrix & m2, int begin, int end, int other_dim, Matrix & m3);

@@ -28,7 +28,7 @@ int main()
 	m.checkMinimumNumOfRowsAndCols(3);
 		//!!!NECESSARY TO INCREASE THE MATRIX SIZE TO GET APPROPRIATE RESULT
 	// Also can call increase inside every function, can be done as pleased
-	increase(m);
+	matrixUtilities::pad(m);
 
 	Matrix m_0 = cross_wise_parallel_masked_image_generator(m, imageProcessing::masks::blur,number_of_threads);
 	Matrix m_1 = cross_wise_parallel_masked_image_generator(m, imageProcessing::masks::edge_detection, number_of_threads);

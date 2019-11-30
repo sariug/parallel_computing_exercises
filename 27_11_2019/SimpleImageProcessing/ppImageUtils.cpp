@@ -30,16 +30,7 @@ double CalculateConvolution(Matrix & input, double *mask, int i, int j)
 	return smoothed;
 }
 
-void increase(Matrix & input)
-{
-	Matrix dummy(input.numberOfRows() + 2, input.numberOfCols() + 2, 0.0);
-	for (int i = 0; i < input.numberOfRows(); ++i)
-		for (int j = 0; j < input.numberOfCols(); ++j)
-			dummy(i + 1, j + 1) = input(i, j);
 
-	input = dummy;
-
-}
 
 namespace imageProcessing
 {
@@ -52,11 +43,6 @@ void write_image(std::string filename, const Matrix & img)
     implementation::write_pgm_image(filename.c_str(),img);           /*Writing the PGM in Binary (P5) format*/
 }
 }
-
-
-
-
-
 
 Matrix row_wise_parallel_masked_image_generator(Matrix & input, double *mask, int number_of_threads)
 {
@@ -363,7 +349,7 @@ namespace implementation
 void test()
 {
 	Matrix dummy(2, 3, 1);
-	increase(dummy);
+	matrixUtilities::pad(dummy);
 	for (int i = 1; i < 3; ++i)
 		for (int j = 1; j < 4; ++j)
 		{
@@ -401,7 +387,7 @@ void test()
 
 	double test_mask2[9] = {1,1,1,1,1,1,1,1,1};
 
-	increase(inp);
+	matrixUtilities::pad(inp);
 	Matrix result = masked_image_generator(inp, test_mask2);
 	assert(result(0, 0) == 2);
 	assert(result(0, 1) == 16);

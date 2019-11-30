@@ -7,7 +7,7 @@
 #include <cmath>
 #include <sstream>
 #include <vector>
-#include "Matrix.hpp"
+#include "MatrixUtils.hpp"
 #include <thread>
 #include <cassert>
 
