@@ -20,13 +20,9 @@ namespace matrixUtilities
 {
 Matrix matrixSum(const Matrix &m1, const Matrix &m2)
 {
-	size_t size_rows = m1.numberOfRows();
-	size_t size_columns = m1.numberOfCols();
+	assert((m1.numberOfRows() == m2.numberOfRows()) & (m1.numberOfCols() == m2.numberOfCols()) && "The size of rows or columns don't match, recheck input matrices");
 	size_t size_r = m2.numberOfRows();
 	size_t size_c = m2.numberOfCols();
-	//checking for rows and columns
-	if (size_rows != size_r && size_columns != size_c)
-		throw std::runtime_error("The size of rows or columns don't match, recheck input matrices");
 
 	Matrix mat(size_r, size_c);
 	for (size_t i = 0; i < size_r; i++)
@@ -39,22 +35,16 @@ Matrix matrixSum(const Matrix &m1, const Matrix &m2)
 Matrix matrixSumParallel(const Matrix &m1, const Matrix &m2, int numberOfThreads)
 {
 
-	Matrix A = m1;
-	Matrix B = m2;
-	check(A, B);
-	int size_1 = 0;
-	int size_2 = 0;
-	Matrix sum(A.numberOfRows(), A.numberOfCols());
-	if (A.numberOfRows() > A.numberOfCols())
+	assert((m1.numberOfRows() == m2.numberOfRows()) & (m1.numberOfCols() == m2.numberOfCols()) && "The size of rows or columns don't match, recheck input matrices");
+	int size_1 = m1.numberOfCols();
+	int size_2 = m1.numberOfRows();
+	Matrix sum(m1.numberOfRows(), m1.numberOfCols());
+	if (m1.numberOfRows() > m1.numberOfCols())
 	{
-		size_2 = A.numberOfCols();
-		size_1 = A.numberOfRows();
+		size_2 = m1.numberOfCols();
+		size_1 = m1.numberOfRows();
 	}
-	else
-	{
-		size_1 = A.numberOfCols();
-		size_2 = A.numberOfRows();
-	}
+
 	int chunk = size_1 / numberOfThreads;
 	// start timer
 	std::vector<std::thread> threads;
@@ -63,13 +53,13 @@ Matrix matrixSumParallel(const Matrix &m1, const Matrix &m2, int numberOfThreads
 	for (int i = 0; i < numberOfThreads - 1; ++i)
 	{
 		// At each iteration, we create a new thread who gets a function to compute and store the thread in threads vector.
-		threads.emplace_back(sumThread, std::ref(A), std::ref(B), chunk * i, chunk * (i + 1), size_2, std::ref(sum));
+		threads.emplace_back(sumThread, std::ref(m1), std::ref(m2), chunk * i, chunk * (i + 1), size_2, std::ref(sum));
 		// NOTE: std::ref(sums[i]) means the sums[i] is passed by reference.
 		// https://www.learncpp.com/cpp-tutorial/73-passing-arguments-by-reference/
 	}
 
 	// Main thread does the last chunk until the end of the arrays.
-	sumThread(A, B, (numberOfThreads - 1) * chunk, size_1, size_2, sum);
+	sumThread(m1, m2, (numberOfThreads - 1) * chunk, size_1, size_2, sum);
 
 	// At this point all the calculations is finished, we syncronize the threads( finalize threads ).
 	for (auto &thread : threads)
@@ -83,13 +73,11 @@ Matrix matrixSumParallel(const Matrix &m1, const Matrix &m2, int numberOfThreads
 //
 Matrix entryWiseProduct(const Matrix &m1, const Matrix &m2)
 {
-	size_t size_rows = m1.numberOfRows();
-	size_t size_columns = m1.numberOfCols();
+	//checking for rows and columns
+	assert((m1.numberOfRows() == m2.numberOfRows()) & (m1.numberOfCols() == m2.numberOfCols()) && "The size of rows or columns don't match, recheck input matrices");
+	
 	size_t size_r = m2.numberOfRows();
 	size_t size_c = m2.numberOfCols();
-	//checking for rows and columns
-	if (size_rows != size_r && size_columns != size_c)
-		throw std::runtime_error("The size of rows or columns don't match, recheck input matrices");
 	Matrix mat(size_r, size_c);
 	for (size_t i = 0; i < size_r; i++)
 		for (size_t j = 0; j < size_c; j++)
@@ -97,42 +85,21 @@ Matrix entryWiseProduct(const Matrix &m1, const Matrix &m2)
 
 	return mat;
 }
-void check(const Matrix &m1, const Matrix &m2)
-{
-	size_t size_rows = m1.numberOfRows();
-	size_t size_columns = m1.numberOfCols();
-	size_t size_r = m2.numberOfRows();
-	size_t size_c = m2.numberOfCols();
-	//checking for rows and columns
-	if (size_rows != size_r && size_columns != size_c)
-		throw std::runtime_error("The size of rows or columns don't match, recheck input matrices");
-}
 
-void sumThread(Matrix &m1, Matrix &m2, int begin, int end, int other_dim, Matrix &m3)
-{
-	for (size_t i = begin; i < end; i++)
-		for (size_t j = 0; j < other_dim; j++)
-			m3(i, j) = m1(i, j) + m2(i, j);
-}
+
 //
 Matrix entryWiseProductParallel(const Matrix &m1, const Matrix &m2, int numberOfThreads)
 {
 
-	Matrix A = m1;
-	Matrix B = m2;
-	check(A, B);
-	int size_1 = 0;
-	int size_2 = 0;
-	Matrix product(A.numberOfRows(), A.numberOfCols());
-	if (A.numberOfRows() > A.numberOfCols())
+	assert((m1.numberOfRows() == m2.numberOfRows()) & (m1.numberOfCols() == m2.numberOfCols()) && "The size of rows or columns don't match, recheck input matrices");
+
+	int size_1 = m1.numberOfCols();
+	int size_2 = m1.numberOfRows();
+	Matrix product(m1.numberOfRows(), m1.numberOfCols());
+	if (m1.numberOfRows() > m1.numberOfCols())
 	{
-		size_2 = A.numberOfCols();
-		size_1 = A.numberOfRows();
-	}
-	else
-	{
-		size_1 = A.numberOfCols();
-		size_2 = A.numberOfRows();
+		size_2 = m1.numberOfCols();
+		size_1 = m1.numberOfRows();
 	}
 	int chunk = size_1 / numberOfThreads;
 	// start timer
@@ -142,13 +109,13 @@ Matrix entryWiseProductParallel(const Matrix &m1, const Matrix &m2, int numberOf
 	for (int i = 0; i < numberOfThreads - 1; ++i)
 	{
 		// At each iteration, we create a new thread who gets a function to compute and store the thread in threads vector.
-		threads.emplace_back(productThread, std::ref(A), std::ref(B), chunk * i, chunk * (i + 1), size_2, std::ref(product));
+		threads.emplace_back(productThread, std::ref(m1), std::ref(m2), chunk * i, chunk * (i + 1), size_2, std::ref(product));
 		// NOTE: std::ref(sums[i]) means the sums[i] is passed by reference.
 		// https://www.learncpp.com/cpp-tutorial/73-passing-arguments-by-reference/
 	}
 
 	// Main thread does the last chunk until the end of the arrays.
-	productThread(A, B, (numberOfThreads - 1) * chunk, size_1, size_2, product);
+	productThread(m1, m2, (numberOfThreads - 1) * chunk, size_1, size_2, product);
 
 	// At this point all the calculations is finished, we syncronize the threads( finalize threads ).
 	for (auto &thread : threads)
@@ -160,16 +127,22 @@ Matrix entryWiseProductParallel(const Matrix &m1, const Matrix &m2, int numberOf
 	return product;
 }
 
-void productThread(Matrix &m1, Matrix &m2, int begin, int end, int other_dim, Matrix &m3)
+void productThread(const Matrix &m1, const Matrix &m2, int begin, int end, int other_dim, Matrix &m3)
 {
 	for (size_t i = begin; i < end; i++)
 		for (size_t j = 0; j < other_dim; j++)
 			m3(i, j) = m1(i, j) * m2(i, j);
 }
-void pad(Matrix & m,int step, double value)
+void sumThread(const Matrix &m1, const Matrix &m2, int begin, int end, int other_dim, Matrix &m3)
+{
+	for (size_t i = begin; i < end; i++)
+		for (size_t j = 0; j < other_dim; j++)
+			m3(i, j) = m1(i, j) + m2(i, j);
+}
+void pad(Matrix &m, int step, double value)
 {
 	// Can we make something better here ?
-	Matrix dummy(m.numberOfRows() + 2*step, m.numberOfCols() + 2*step, value);
+	Matrix dummy(m.numberOfRows() + 2 * step, m.numberOfCols() + 2 * step, value);
 	for (int i = 0; i < m.numberOfRows(); ++i)
 		for (int j = 0; j < m.numberOfCols(); ++j)
 			dummy(i + step, j + step) = m(i, j);

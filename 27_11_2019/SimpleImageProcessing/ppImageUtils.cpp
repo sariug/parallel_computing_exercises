@@ -3,6 +3,7 @@ using namespace std;
 
 Matrix masked_image_generator(Matrix & input, double *mask)
 {
+	// Here -2 is because the padding is just one. 
 	Matrix res(input.numberOfRows() - 2, input.numberOfCols() - 2, 0);
 
 	for (int i = 1; i < input.numberOfRows() - 1; ++i)
