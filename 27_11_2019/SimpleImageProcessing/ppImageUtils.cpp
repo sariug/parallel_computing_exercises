@@ -3,38 +3,6 @@ using namespace std;
 
 
 
-Matrix EdgeDetection()
-{
-	Matrix ed(3, 3);
-	for (int i = 0; i < 3; i++)
-		for (int j = 0; j < 3; j++)
-			ed(i, j) = -1;
-
-	ed(1, 1) = 8;
-
-	return ed;
-}
-
-Matrix Sharpen()
-{
-	Matrix sh(3, 3, -1);
-	sh(0, 0) = 0;
-	sh(3 - 1, 1 - 1) = 0;
-	sh(1 - 1, 3 - 1) = 0;
-	sh(3 - 1, 3 - 1) = 0;
-	sh(2 - 1, 2 - 1) = 5;
-
-
-
-	return sh;
-}
-
-Matrix Blur()
-{
-	Matrix bl(3, 3, 1.0 / 9.0);
-
-	return bl;
-}
 
 void check(Matrix &input)
 {
@@ -42,14 +10,14 @@ void check(Matrix &input)
 		throw std::runtime_error("Minimum rows or columns should be 3, check input matrix");
 }
 
-Matrix masked_image_generator(Matrix & input, Matrix & convolution)
+Matrix masked_image_generator(Matrix & input, double *mask)
 {
 	Matrix res(input.numberOfRows() - 2, input.numberOfCols() - 2, 0);
 
 	for (int i = 1; i < input.numberOfRows() - 1; ++i)
 		for (int j = 1; j < input.numberOfCols() - 1; j++)
 		{
-			res(i - 1, j - 1) = CalculateConvolution(input, convolution, i, j);
+			res(i - 1, j - 1) = CalculateConvolution(input, mask, i, j);
 		}
 
 
@@ -58,15 +26,14 @@ Matrix masked_image_generator(Matrix & input, Matrix & convolution)
 
 }
 
-double CalculateConvolution(Matrix & input, Matrix & convolution, int i, int j)
+double CalculateConvolution(Matrix & input, double *mask, int i, int j)
 {
 	double smoothed = 0.0;
 
 	for (int m = -1; m < 2; ++m)
 		for (int n = -1; n < 2; ++n)
 		{
-			smoothed += input(i - m, j - n)*convolution(m + 1, n + 1);
-
+			smoothed += input(i - m, j - n)*mask[(m + 1 )*3+(n + 1)];
 		}
 
 	smoothed = std::max(smoothed, 0.0);
@@ -280,7 +247,6 @@ void test()
 		assert(dummy(i, 4) == 0.0);
 	}
 
-	Matrix ones(3, 3, 1);
 	Matrix inp(3, 3, 0);
 	inp(0, 2) = 8;
 	inp(1, 0) = 4;
@@ -289,17 +255,14 @@ void test()
 	inp(2, 1) = 3;
 	inp(1, 2) = 6;
 	inp(2, 2) = 1;
-	ones(0, 1) = 0;
-	ones(1, 0) = -1;
-
-	double a = CalculateConvolution(inp, ones, 1, 1);
+	double test_mask[9] = {1,0,1,-1,1,1,1,1,1};
+	double a = CalculateConvolution(inp, test_mask, 1, 1);
 	assert(a == 7.0);
 
-
-	Matrix on(3, 3, 1);
+	double test_mask2[9] = {1,1,1,1,1,1,1,1,1};
 
 	increase(inp);
-	Matrix result = masked_image_generator(inp, on);
+	Matrix result = masked_image_generator(inp, test_mask2);
 	assert(result(0, 0) == 2);
 	assert(result(0, 1) == 16);
 	assert(result(0, 2) == 12);
@@ -310,7 +273,7 @@ void test()
 	assert(result(2, 1) == 14);
 	assert(result(2, 2) == 8);
 
-	Matrix result_1 = row_wise_parallel_masked_image_generator(inp, on, 2);
+	Matrix result_1 = row_wise_parallel_masked_image_generator(inp, test_mask2, 2);
 	//Matrix result_1 = column_wise_parallel_masked_image_generator(inp, on, 2);
 	//Matrix result_1 = cross_wise_parallel_masked_image_generator(inp, on, 2);
 	assert(result_1(0, 0) == 2);
@@ -327,7 +290,7 @@ void test()
 
 
 
-Matrix row_wise_parallel_masked_image_generator(Matrix & input, Matrix & convolution, int number_of_threads)
+Matrix row_wise_parallel_masked_image_generator(Matrix & input, double *mask, int number_of_threads)
 {
 
 	if (number_of_threads > input.numberOfRows() - 3)
@@ -342,16 +305,15 @@ Matrix row_wise_parallel_masked_image_generator(Matrix & input, Matrix & convolu
 	int chunk = size_1 / numberOfThreads;
 	std::vector<std::thread> threads;
 	Matrix A = input;
-	Matrix B = convolution;
 	Matrix result(input.numberOfRows() - 2, input.numberOfCols() - 2);
 	for (int i = 0; i < numberOfThreads - 1; ++i)
 	{
 		// At each iteration, we create a new thread who gets a function to compute and store the thread in threads vector.
-		threads.emplace_back(threadwise_masking, std::ref(A), std::ref(B), chunk*i, chunk * (i + 1), size_2, std::ref(result));
+		threads.emplace_back(threadwise_masking, std::ref(A), std::ref(mask), chunk*i, chunk * (i + 1), size_2, std::ref(result));
 	}
 
 	// Main thread does the last chunk until the end of the arrays.
-	threadwise_masking(A, B, (numberOfThreads - 1)*chunk, size_1, size_2, result);
+	threadwise_masking(A,mask, (numberOfThreads - 1)*chunk, size_1, size_2, result);
 
 	for (auto& thread : threads) thread.join();
 
@@ -362,7 +324,7 @@ Matrix row_wise_parallel_masked_image_generator(Matrix & input, Matrix & convolu
 
 }
 
-Matrix column_wise_parallel_masked_image_generator(Matrix & input, Matrix & convolution, int number_of_threads)
+Matrix column_wise_parallel_masked_image_generator(Matrix & input, double *mask, int number_of_threads)
 {
 
 	if (number_of_threads > input.numberOfCols() - 3)
@@ -377,17 +339,16 @@ Matrix column_wise_parallel_masked_image_generator(Matrix & input, Matrix & conv
 	int chunk = size_2 / numberOfThreads;
 	std::vector<std::thread> threads;
 	Matrix A = input;
-	Matrix B = convolution;
 	Matrix result(input.numberOfRows() - 2, input.numberOfCols() - 2);
 	for (int i = 0; i < numberOfThreads - 1; ++i)
 	{
 		// At each iteration, we create a new thread who gets a function to compute and store the thread in threads vector.
-		threads.emplace_back(threadwise_masking, std::ref(A), std::ref(B), chunk*i, chunk * (i + 1), size_1, std::ref(result));
+		threads.emplace_back(threadwise_masking, std::ref(A), std::ref(mask), chunk*i, chunk * (i + 1), size_1, std::ref(result));
 		std::cout << result;
 	}
 
 	// Main thread does the last chunk until the end of the arrays.
-	threadwise_masking(A, B, (numberOfThreads - 1)*chunk, size_2, size_1, result);
+	threadwise_masking(A, mask, (numberOfThreads - 1)*chunk, size_2, size_1, result);
 	std::cout << result;
 	for (auto& thread : threads) thread.join();
 
@@ -398,7 +359,7 @@ Matrix column_wise_parallel_masked_image_generator(Matrix & input, Matrix & conv
 
 }
 
-Matrix cross_wise_parallel_masked_image_generator(Matrix & input, Matrix & convolution, int number_of_threads)
+Matrix cross_wise_parallel_masked_image_generator(Matrix & input, double *mask, int number_of_threads)
 {
 
 	if (number_of_threads > input.numberOfRows() + input.numberOfCols() - 6)
@@ -422,18 +383,17 @@ Matrix cross_wise_parallel_masked_image_generator(Matrix & input, Matrix & convo
 	int chunk_col = size_2 / numberOfThreadsC;
 	std::vector<std::thread> threads;
 	Matrix A = input;
-	Matrix B = convolution;
 	Matrix result(input.numberOfRows() - 2, input.numberOfCols() - 2);
 	for (int i = 0; i < numberOfThreadsR - 1; i++)
 	{
 		for (int j = 0; j < numberOfThreadsC - 1; j++)
 		{
 			// At each iteration, we create a new thread who gets a function to compute and store the thread in threads vector.
-			threads.emplace_back(threadwise_masking_cross, std::ref(A), std::ref(B), chunk_row*i, chunk_row * (i + 1), chunk_col*j, chunk_col * (j + 1), std::ref(result));
+			threads.emplace_back(threadwise_masking_cross, std::ref(A), std::ref(mask), chunk_row*i, chunk_row * (i + 1), chunk_col*j, chunk_col * (j + 1), std::ref(result));
 		}
-		threadwise_masking_cross(A, B, chunk_row*i, chunk_row * (i + 1), (numberOfThreadsC - 1)*chunk_col, size_2, result);
+		threadwise_masking_cross(A, mask, chunk_row*i, chunk_row * (i + 1), (numberOfThreadsC - 1)*chunk_col, size_2, result);
 	}
-	threadwise_masking_cross(A, B, numberOfThreadsR - 1, size_1, 0, size_2, result);
+	threadwise_masking_cross(A, mask, numberOfThreadsR - 1, size_1, 0, size_2, result);
 
 	// Main thread does the last chunk until the end of the arrays.
 
@@ -447,22 +407,30 @@ Matrix cross_wise_parallel_masked_image_generator(Matrix & input, Matrix & convo
 
 }
 
-void threadwise_masking(Matrix & input, Matrix & convolution, int begin, int end, int other_dim, Matrix & result)
+void threadwise_masking(Matrix & input, double *mask, int begin, int end, int other_dim, Matrix & result)
 {
 
 	for (int i = begin; i < end; i++)
 		for (int j = 0; j < other_dim; j++)
-			result(i, j) = CalculateConvolution(input, convolution, i + 1, j + 1);
+			result(i, j) = CalculateConvolution(input, mask, i + 1, j + 1);
 
 }
 
-void threadwise_masking_cross(Matrix & input, Matrix & convolution, int begin, int end, int begin_other, int end_other, Matrix & result)
+void threadwise_masking_cross(Matrix & input, double *mask, int begin, int end, int begin_other, int end_other, Matrix & result)
 {
 
 	for (int i = begin; i < end; i++)
 		for (int j = begin_other; j < end_other; j++)
-			result(i, j) = CalculateConvolution(input, convolution, i + 1, j + 1);
+			result(i, j) = CalculateConvolution(input, mask, i + 1, j + 1);
 
 
 
 }
+
+
+namespace imageProcessing::masks
+{
+double blur[9] = {1 / 9., 1 / 9., 1 / 9., 1 / 9., 1 / 9., 1 / 9., 1 / 9., 1 / 9., 1 / 9.};
+double edge_detection[9] = {-1, -1, -1, -1, 8, -1, -1, -1, -1};
+double sharpen[9] = {0, -1, 0, -1, 5, -1, 0, -1, 0};
+} // namespace imageProcessing::masks

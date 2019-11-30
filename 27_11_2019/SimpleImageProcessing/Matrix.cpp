@@ -115,7 +115,7 @@ std::ostream &operator<<(std::ostream &os, Matrix &mat_1)
 
 	return os;
 }
-std::vector<double> &operator[](int index)
+std::vector<double> &Matrix::operator[](int index)
 {
 	return m_matrix[index];
 }
