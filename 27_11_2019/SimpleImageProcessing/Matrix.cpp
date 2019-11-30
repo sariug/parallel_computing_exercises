@@ -22,10 +22,7 @@ Matrix::Matrix(int nRows, int nCols, double value)
 	m_matrix = std::vector<std::vector<double>>(nRows, std::vector<double>(nCols, value));
 }
 
-Matrix::Matrix(std::vector<std::vector<double>> m)
-{
-	m_matrix = m;
-}
+Matrix::Matrix(std::vector<std::vector<double>> m):m_matrix(m){}
 
 bool operator==(const Matrix &lhs, const Matrix &rhs)
 {

@@ -12,7 +12,6 @@ Matrix masked_image_generator(Matrix & input, double *mask)
 			res(i - 1, j - 1) = CalculateConvolution(input, mask, i, j);
 		}
 	return res;
-
 }
 
 double CalculateConvolution(Matrix & input, double *mask, int i, int j)
@@ -31,19 +30,19 @@ double CalculateConvolution(Matrix & input, double *mask, int i, int j)
 	return smoothed;
 }
 
+Matrix& apply_mask_to_image(Matrix & input, double *mask, imageProcessing::CalculationMethod method, int number_of_threads)
+{
+	int size_1 = input.numberOfRows() - 2;
+	int size_2 = input.numberOfCols() - 2;
+	int numberOfThreads = number_of_threads;
+	int chunk = size_1 / numberOfThreads;
+	std::vector<std::thread> threads;
+	Matrix result(input.numberOfRows() - 2, input.numberOfCols() - 2);
 
 
-namespace imageProcessing
-{
-Matrix read_image(std::string filename)
-{
-    return Matrix( implementation::read_pgm_image(filename.c_str()));
 }
-void write_image(std::string filename, const Matrix & img)
-{
-    implementation::write_pgm_image(filename.c_str(),img);           /*Writing the PGM in Binary (P5) format*/
-}
-}
+
+
 
 Matrix row_wise_parallel_masked_image_generator(Matrix & input, double *mask, int number_of_threads)
 {
@@ -168,7 +167,6 @@ void threadwise_masking(Matrix & input, double *mask, int begin, int end, int ot
 	for (int i = begin; i < end; i++)
 		for (int j = 0; j < other_dim; j++)
 			result(i, j) = CalculateConvolution(input, mask, i + 1, j + 1);
-
 }
 
 void threadwise_masking_cross(Matrix & input, double *mask, int begin, int end, int begin_other, int end_other, Matrix & result)
@@ -177,9 +175,6 @@ void threadwise_masking_cross(Matrix & input, double *mask, int begin, int end, 
 	for (int i = begin; i < end; i++)
 		for (int j = begin_other; j < end_other; j++)
 			result(i, j) = CalculateConvolution(input, mask, i + 1, j + 1);
-
-
-
 }
 
 
@@ -190,6 +185,17 @@ double edge_detection[9] = {-1, -1, -1, -1, 8, -1, -1, -1, -1};
 double sharpen[9] = {0, -1, 0, -1, 5, -1, 0, -1, 0};
 } // namespace imageProcessing::masks
 
+namespace imageProcessing
+{
+Matrix read_image(std::string filename)
+{
+    return Matrix( implementation::read_pgm_image(filename.c_str()));
+}
+void write_image(std::string filename, const Matrix & img)
+{
+    implementation::write_pgm_image(filename.c_str(),img);           /*Writing the PGM in Binary (P5) format*/
+}
+}
 
 
 

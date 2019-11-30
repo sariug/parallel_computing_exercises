@@ -11,6 +11,7 @@
 #include <vector>
 #include <algorithm>
 #include <limits>
+#include <string>
 #include <stdexcept>
 
 class Matrix
