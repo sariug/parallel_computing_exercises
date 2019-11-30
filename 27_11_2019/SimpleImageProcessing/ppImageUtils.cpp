@@ -3,7 +3,7 @@ using namespace std;
 
 namespace imageProcessing
 {
-Matrix apply_mask_to_image(Matrix &input, double *mask, imageProcessing::CalculationMethod method, int number_of_threads)
+Matrix apply_mask_to_image(const Matrix &input, double *mask, imageProcessing::CalculationMethod method, int number_of_threads)
 {
 	Matrix result(input.numberOfRows() - 2, input.numberOfCols() - 2, 0);
 	if (method == imageProcessing::CalculationMethod::Serial)
@@ -81,7 +81,7 @@ Matrix apply_mask_to_image(Matrix &input, double *mask, imageProcessing::Calcula
 	return result;
 }
 
-void threadwise_masking(Matrix &input, double *mask, int begin, int end, int other_dim, Matrix &result)
+void threadwise_masking(const Matrix &input, double *mask, int begin, int end, int other_dim, Matrix &result)
 {
 
 	for (int i = begin; i < end; i++)
@@ -89,14 +89,14 @@ void threadwise_masking(Matrix &input, double *mask, int begin, int end, int oth
 			result(i, j) = calculate_convolution(input, mask, i + 1, j + 1);
 }
 
-void threadwise_masking_cross(Matrix &input, double *mask, int begin, int end, int begin_other, int end_other, Matrix &result)
+void threadwise_masking_cross(const Matrix &input, double *mask, int begin, int end, int begin_other, int end_other, Matrix &result)
 {
 
 	for (int i = begin; i < end; i++)
 		for (int j = begin_other; j < end_other; j++)
 			result(i, j) = calculate_convolution(input, mask, i + 1, j + 1);
 }
-double calculate_convolution(Matrix &input, double *mask, int i, int j)
+double calculate_convolution(const Matrix &input, double *mask, int i, int j)
 {
 	double smoothed = 0.0;
 
