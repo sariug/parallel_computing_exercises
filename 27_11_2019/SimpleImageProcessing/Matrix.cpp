@@ -16,6 +16,12 @@ Matrix::Matrix(int nRows, int nCols )
     m_matrix = std::vector<std::vector<double>>(nRows, std::vector<double>(nCols, 0.0));
 }
 
+Matrix::Matrix(int nRows, int nCols,double value)
+{
+
+	m_matrix = std::vector<std::vector<double>>(nRows, std::vector<double>(nCols, value));
+}
+
 bool operator==( const Matrix& lhs, const Matrix& rhs)
 {
     size_t number_of_rows = rhs.numberOfRows( );
@@ -40,7 +46,7 @@ void Matrix::input_matrix()
 			std::cin >> operator()(i, j);
 			std::cout << "\n";
 		}
-
+	std::cout << "\n";
 }
 
 size_t Matrix::numberOfCols() const
@@ -107,6 +113,7 @@ std::ostream& operator<<(std::ostream & os, Matrix & mat_1)
 			os << mat_1(i, j) << " ";
 		
 	}
+	std::cout << "\n";
 	
 	return os;
 }

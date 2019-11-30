@@ -18,6 +18,8 @@ public:
     Matrix();
     Matrix(int nRows, int nCols);
 
+	Matrix(int nRows, int nCols, double value);
+
     void input_matrix();
 
     size_t numberOfCols() const;
