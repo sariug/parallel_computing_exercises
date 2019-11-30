@@ -8,41 +8,42 @@
 */
 Matrix::Matrix()
 {
-    m_matrix = std::vector<std::vector<double>>(3,{0.,0.,0.});
+	m_matrix = std::vector<std::vector<double>>(3, {0., 0., 0.});
 }
-Matrix::Matrix(int nRows, int nCols )
+Matrix::Matrix(int nRows, int nCols)
 {
 
-    m_matrix = std::vector<std::vector<double>>(nRows, std::vector<double>(nCols, 0.0));
+	m_matrix = std::vector<std::vector<double>>(nRows, std::vector<double>(nCols, 0.0));
 }
 
-Matrix::Matrix(int nRows, int nCols,double value)
+Matrix::Matrix(int nRows, int nCols, double value)
 {
 
 	m_matrix = std::vector<std::vector<double>>(nRows, std::vector<double>(nCols, value));
 }
 
-bool operator==( const Matrix& lhs, const Matrix& rhs)
+bool operator==(const Matrix &lhs, const Matrix &rhs)
 {
-    size_t number_of_rows = rhs.numberOfRows( );
-    size_t number_of_cols = rhs.numberOfCols( );
+	size_t number_of_rows = rhs.numberOfRows();
+	size_t number_of_cols = rhs.numberOfCols();
 
-    for ( size_t i = 0 ;  i < number_of_rows ; ++i )
-    {
-        for ( size_t j = 0 ;  j < number_of_cols ; ++j )
-        {
-            if ( std::abs( lhs( i, j ) - rhs ( i, j ) ) > std::numeric_limits<double>::epsilon()  ) return false; 
-        }
-    }
-    return true;
-
+	for (size_t i = 0; i < number_of_rows; ++i)
+	{
+		for (size_t j = 0; j < number_of_cols; ++j)
+		{
+			if (std::abs(lhs(i, j) - rhs(i, j)) > std::numeric_limits<double>::epsilon())
+				return false;
+		}
+	}
+	return true;
 }
 
 void Matrix::input_matrix()
 {
 	for (size_t i = 0; i < numberOfRows(); ++i)
 		for (size_t j = 0; j < numberOfCols(); ++j)
-		{	std::cout << "Element (" << i << "," << j << ") = ";
+		{
+			std::cout << "Element (" << i << "," << j << ") = ";
 			std::cin >> operator()(i, j);
 			std::cout << "\n";
 		}
@@ -51,21 +52,19 @@ void Matrix::input_matrix()
 
 size_t Matrix::numberOfCols() const
 {
-    return m_matrix[0].size();
+	return m_matrix[0].size();
 }
 size_t Matrix::numberOfRows() const
 {
-    return m_matrix.size();
+	return m_matrix.size();
 }
 
-double& Matrix::operator()(int x, int y)
+double &Matrix::operator()(int x, int y)
 {
-    return m_matrix[x][y];
+	return m_matrix[x][y];
 }
 
-
-
-Matrix & Matrix::operator*(Matrix & mat_1)
+Matrix &Matrix::operator*(Matrix &mat_1)
 {
 	size_t size_rows = mat_1.numberOfRows();
 	size_t size_columns = mat_1.numberOfCols();
@@ -82,12 +81,12 @@ Matrix & Matrix::operator*(Matrix & mat_1)
 	return mat_1;
 }
 
-const double& Matrix::operator()(int x, int y) const
+const double &Matrix::operator()(int x, int y) const
 {
-    return m_matrix[x][y];
+	return m_matrix[x][y];
 }
 
-Matrix & Matrix::operator+(Matrix & mat_1)
+Matrix &Matrix::operator+(Matrix &mat_1)
 {
 	size_t size_rows = mat_1.numberOfRows();
 	size_t size_columns = mat_1.numberOfCols();
@@ -104,16 +103,19 @@ Matrix & Matrix::operator+(Matrix & mat_1)
 	return mat_1;
 }
 
-std::ostream& operator<<(std::ostream & os, Matrix & mat_1)
+std::ostream &operator<<(std::ostream &os, Matrix &mat_1)
 {
 	for (size_t i = 0; i < mat_1.numberOfRows(); ++i)
 	{
 		os << std::endl;
 		for (size_t j = 0; j < mat_1.numberOfCols(); ++j)
 			os << mat_1(i, j) << " ";
-		
 	}
 	std::cout << "\n";
-	
+
 	return os;
+}
+std::vector<double> &operator[](int index)
+{
+	return m_matrix[index];
 }

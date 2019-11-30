@@ -34,7 +34,6 @@ void test_all()
 {
 
 	Matrix A(5, 4);
-
 	Matrix B(5, 4);
 
 	for (size_t i = 0; i < A.numberOfRows(); ++i)

@@ -18,7 +18,7 @@ public:
     Matrix();
     Matrix(int nRows, int nCols);
 
-	Matrix(int nRows, int nCols, double value);
+    Matrix(int nRows, int nCols, double value);
 
     void input_matrix();
 
@@ -29,11 +29,7 @@ public:
     friend bool operator==(const Matrix &lhs, const Matrix &rhs);
     Matrix &operator+(Matrix &mat_1);
     Matrix &operator*(Matrix &mat_1);
-std::vector<double> &operator[](int index) 
-{ 
-
-    return m_matrix[index]; 
-} 
+    std::vector<double> &operator[](int index);
     const double &operator()(int x, int y) const;
     friend std::ostream &operator<<(std::ostream &os, Matrix &mat_1);
 
