@@ -20,7 +20,7 @@ public:
     Matrix(int nRows, int nCols);
 
     Matrix(int nRows, int nCols, double value);
-
+    Matrix(std::vector<std::vector<double>> m);
     void input_matrix();
 
     size_t numberOfCols() const;

@@ -389,15 +389,18 @@ void test()
 
 	matrixUtilities::pad(inp);
 	Matrix result = masked_image_generator(inp, test_mask2);
-	assert(result(0, 0) == 2);
-	assert(result(0, 1) == 16);
-	assert(result(0, 2) == 12);
-	assert(result(1, 0) == 7);
-	assert(result(1, 1) == 22);
-	assert(result(1, 2) == 16);
-	assert(result(2, 0) == 7);
-	assert(result(2, 1) == 14);
-	assert(result(2, 2) == 8);
+	Matrix benchmark_result({{2,16,12},{7, 22,16},{7,14,8}});
+	
+	assert(result == benchmark_result);
+	// assert(result(0, 0) == 2);
+	// assert(result(0, 1) == 16);
+	// assert(result(0, 2) == 12);
+	// assert(result(1, 0) == 7);
+	// assert(result(1, 1) == 22);
+	// assert(result(1, 2) == 16);
+	// assert(result(2, 0) == 7);
+	// assert(result(2, 1) == 14);
+	// assert(result(2, 2) == 8);
 
 	Matrix result_1 = row_wise_parallel_masked_image_generator(inp, test_mask2, 2);
 	//Matrix result_1 = column_wise_parallel_masked_image_generator(inp, on, 2);

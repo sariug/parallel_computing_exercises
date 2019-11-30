@@ -22,6 +22,11 @@ Matrix::Matrix(int nRows, int nCols, double value)
 	m_matrix = std::vector<std::vector<double>>(nRows, std::vector<double>(nCols, value));
 }
 
+Matrix::Matrix(std::vector<std::vector<double>> m)
+{
+	m_matrix = m;
+}
+
 bool operator==(const Matrix &lhs, const Matrix &rhs)
 {
 	size_t number_of_rows = rhs.numberOfRows();
@@ -123,5 +128,5 @@ std::vector<double> &Matrix::operator[](int index)
 bool Matrix::checkMinimumNumOfRowsAndCols(int n)
 {
 	if (this->numberOfCols() < n || this->numberOfRows() < n)
-		throw std::runtime_error("Minimum rows or columns should be %d"+std::to_string(n)+", check input matrix");
+		throw std::runtime_error("Minimum rows or columns should be %d" + std::to_string(n) + ", check input matrix");
 }
