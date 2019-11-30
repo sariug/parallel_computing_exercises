@@ -34,18 +34,15 @@ enum CalculationMethod
     ParallelColumnwise,
     ParallelCross
 };
-Matrix read_image(std::string);
-void write_image(std::string filename, const Matrix &);
-} // namespace imageProcessing
-
-void test();
-Matrix row_wise_parallel_masked_image_generator(Matrix &input, double *mask, int number_of_threads);
-Matrix column_wise_parallel_masked_image_generator(Matrix &input, double *mask, int number_of_threads);
-Matrix cross_wise_parallel_masked_image_generator(Matrix &input, double *mask, int number_of_threads);
+Matrix apply_mask_to_image(Matrix &input, double *mask, imageProcessing::CalculationMethod method, int number_of_threads=1);
 void threadwise_masking(Matrix &input, double *mask, int begin, int end, int other_dim, Matrix &result);
 void threadwise_masking_cross(Matrix &input, double *mask, int begin, int end, int begin_other, int end_other, Matrix &result);
-Matrix masked_image_generator(Matrix &input, double *mask);
-double CalculateConvolution(Matrix &input, double *mask, int i, int j);
-void increase(Matrix &input);
+double calculate_convolution(Matrix &input, double *mask, int i, int j);
+Matrix read_image(std::string);
+void write_image(std::string filename, const Matrix &);
+void test_image_processing_methods();
+} // namespace imageProcessing
+
+
 
 #endif
