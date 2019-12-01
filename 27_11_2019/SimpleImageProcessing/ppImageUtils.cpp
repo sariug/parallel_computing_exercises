@@ -168,11 +168,15 @@ void write_image(std::string filename, const Matrix &img)
 	implementation::write_pgm_image(filename.c_str(), img); /*Writing the PGM in Binary (P5) format*/
 }
 } // namespace imageProcessing
-namespace imageProcessing::masks // This namespacing requires c++17
+namespace imageProcessing // This namespacing requires c++17
 {
-double blur[9] = {1 / 9., 1 / 9., 1 / 9., 1 / 9., 1 / 9., 1 / 9., 1 / 9., 1 / 9., 1 / 9.};
-double edge_detection[9] = {-1, -1, -1, -1, 8, -1, -1, -1, -1};
-double sharpen[9] = {0, -1, 0, -1, 5, -1, 0, -1, 0};
+	namespace masks {
+		double blur[9] = { 1 / 9., 1 / 9., 1 / 9., 1 / 9., 1 / 9., 1 / 9., 1 / 9., 1 / 9., 1 / 9. };
+		double edge_detection[9] = { -1, -1, -1, -1, 8, -1, -1, -1, -1 };
+		double sharpen[9] = { 0, -1, 0, -1, 5, -1, 0, -1, 0 };
+
+	}
+
 } // namespace imageProcessing::masks
 
 /* Implementations of reader and writer*/
