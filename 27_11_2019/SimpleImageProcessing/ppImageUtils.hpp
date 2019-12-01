@@ -18,7 +18,7 @@ static int bits;
 Matrix read_pgm_image(const char *filnam);
 void write_pgm_image(const char *filnam, const Matrix &img);
 } // namespace implementation
-namespace imageProcessing::masks
+namespace imageProcessing::masks // This namespacing requires c++17 
 {
 extern double blur[9];
 extern double edge_detection[9];
