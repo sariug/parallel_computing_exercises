@@ -1,5 +1,6 @@
 # TUM Parallel Computing Exercises 
 
+![](https://travis-ci.com/sariug/parallel_computing_exercises.svg?branch=travis)
 
 
 Tutors:
