@@ -49,5 +49,4 @@ matrix:
       env:
         - MATRIX_EVAL="CC=gcc-7 && CXX=g++-7"
 
-script: git update-index --chmod=+x build_all.sh
-	./build_all.sh
+script:	./build_all.sh
