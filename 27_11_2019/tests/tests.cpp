@@ -10,6 +10,6 @@
 */
 
 
-TEST_CASE( "1: All test cases reside in other .cpp files (empty)", "[multi-file:1]" ) {
+TEST_CASE( "Convolution Test" ) {
 	imageProcessing::test_image_processing_methods();
 }
