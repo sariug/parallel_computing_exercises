@@ -13,3 +13,9 @@ endif()
 
 
 add_subdirectory(SimpleImageProcessing)
+include_directories(tests)
+enable_testing()
+
+add_executable(test1 tests/tests.cpp ../external/catch.hpp )
+target_link_libraries(test1 matrix)
+add_test(NAME Test1 COMMAND test1)
