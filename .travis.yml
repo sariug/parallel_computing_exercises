@@ -4,4 +4,4 @@ compiler:
   - gcc
   - clang
 
-script: build_all.sh
+script: ./build_all.sh
