@@ -110,11 +110,17 @@ Matrix &Matrix::operator+=(const Matrix& RHS)
 	size_t nRows = numberOfRows();
 	size_t nColumns = numberOfCols();
 
+	// throw an exception if matrix dimensions do not match
+	if ( nRows != RHS.numberOfRows() || nColumns != RHS.numberOfCols())
+    {
+	    throw "invalid entry. matrix dimensions do not match!";
+    }
+
 	for (int i = 0; i < nRows; ++i)
 	{
 		for (int j = 0; j < nColumns; ++j)
 		{
-			(*this)(i, j) += RHS(i, j);
+			m_matrix[i][j] += RHS(i, j);
 		}
 	}
 	
