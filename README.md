@@ -59,6 +59,9 @@ Exercises:
 
 **Tutorial 6**:
 
+Exercises:
+- Developing the matrix class with += operator, matrix-matrix multiplication, transpose operator and data structure improvements.
+
 **Tutorial 7**:
 
 **Tutorial 8**:
