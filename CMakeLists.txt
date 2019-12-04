@@ -26,6 +26,7 @@ IF ( ${PAR_COMP_TUTORIAL_ENABLE_PREVIOUS_WEEKS} )
 ENDIF()
 
 add_subdirectory(27_11_2019)
+add_subdirectory(04_12_2019)
 
 
 
