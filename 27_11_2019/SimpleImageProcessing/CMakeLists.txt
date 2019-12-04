@@ -12,3 +12,7 @@ target_link_libraries( main matrix )
 add_custom_command( TARGET main POST_BUILD COMMAND ${CMAKE_COMMAND} -E copy ${CMAKE_CURRENT_SOURCE_DIR}/l.pgm ${CMAKE_CURRENT_BINARY_DIR} )
 
 add_custom_command( TARGET main POST_BUILD COMMAND ${CMAKE_COMMAND} -E copy ${CMAKE_CURRENT_SOURCE_DIR}/l.pgm  $<TARGET_FILE_DIR:main> )
+
+IF(CMAKE_CXX_COMPILER_ID STREQUAL "MSVC")
+	add_custom_command( TARGET main POST_BUILD COMMAND ${CMAKE_COMMAND} -E copy $<TARGET_FILE:matrix>  $<TARGET_FILE_DIR:main> )
+ENDIF() 
