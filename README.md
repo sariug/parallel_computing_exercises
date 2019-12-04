@@ -4,7 +4,7 @@
 
 Tutors:
 
-Oğuz Öztoprak ([JusticeBoi](https://github.com/JusticeBoi/tictactoe))
+Oğuz Öztoprak ([JusticeBoi](https://github.com/JusticeBoi))
 
 Uğurcan Sarı ([sariug](https://github.com/sariug))
 
@@ -55,7 +55,7 @@ Exercises:
 **Tutorial 5**:
 
 Exercises:
-- Implementing image processing functions using the matrix implemented in tutorial 3.
+- Implementing image processing functions using the matrix implemented in tutorial 4.
 
 **Tutorial 6**:
 
