@@ -30,6 +30,7 @@ public:
     double &operator()(int x, int y);
     friend bool operator==(const Matrix &lhs, const Matrix &rhs);
     Matrix &operator+(Matrix &mat_1);
+	Matrix &operator+=(const Matrix& mat1);
     Matrix &operator*(Matrix &mat_1);
     std::vector<double> &operator[](int index);
     const double &operator()(int x, int y) const;

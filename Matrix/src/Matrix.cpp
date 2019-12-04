@@ -105,6 +105,23 @@ Matrix &Matrix::operator+(Matrix &mat_1)
 	return mat_1;
 }
 
+Matrix &Matrix::operator+=(const Matrix& RHS)
+{
+	size_t nRows = numberOfRows();
+	size_t nColumns = numberOfCols();
+
+	for (int i = 0; i < nRows; ++i)
+	{
+		for (int j = 0; j < nColumns; ++j)
+		{
+			(*this)(i, j) += RHS(i, j);
+		}
+	}
+	
+	return *this;
+}
+
+
 std::ostream &operator<<(std::ostream &os, Matrix &mat_1)
 {
 	for (size_t i = 0; i < mat_1.numberOfRows(); ++i)
