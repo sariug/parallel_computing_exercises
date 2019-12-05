@@ -105,13 +105,13 @@ Matrix &Matrix::operator+(Matrix &mat_1)
 	return mat_1;
 }
 
-Matrix &Matrix::operator+=(const Matrix& RHS)
+Matrix &Matrix::operator+=(const Matrix &mat_1)
 {
 	size_t nRows = numberOfRows();
 	size_t nColumns = numberOfCols();
 
 	// throw an exception if matrix dimensions do not match
-	if ( nRows != RHS.numberOfRows() || nColumns != RHS.numberOfCols())
+	if ( nRows != mat_1.numberOfRows() || nColumns != mat_1.numberOfCols())
     {
 	    throw "invalid entry. matrix dimensions do not match!";
     }
@@ -120,7 +120,7 @@ Matrix &Matrix::operator+=(const Matrix& RHS)
 	{
 		for (int j = 0; j < nColumns; ++j)
 		{
-			m_matrix[i][j] += RHS(i, j);
+			m_matrix[i][j] += mat_1(i, j);
 		}
 	}
 	
