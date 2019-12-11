@@ -105,6 +105,29 @@ Matrix &Matrix::operator+(Matrix &mat_1)
 	return mat_1;
 }
 
+Matrix &Matrix::operator+=(const Matrix &mat_1)
+{
+	size_t nRows = numberOfRows();
+	size_t nColumns = numberOfCols();
+
+	// throw an exception if matrix dimensions do not match
+	if ( nRows != mat_1.numberOfRows() || nColumns != mat_1.numberOfCols())
+    {
+	    throw "invalid entry. matrix dimensions do not match!";
+    }
+
+	for (int i = 0; i < nRows; ++i)
+	{
+		for (int j = 0; j < nColumns; ++j)
+		{
+			m_matrix[i][j] += mat_1(i, j);
+		}
+	}
+	
+	return *this;
+}
+
+
 std::ostream &operator<<(std::ostream &os, Matrix &mat_1)
 {
 	for (size_t i = 0; i < mat_1.numberOfRows(); ++i)
