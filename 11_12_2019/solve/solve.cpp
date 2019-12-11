@@ -33,6 +33,6 @@ void testSolve( )
 
     assert( answer.size() == 3 );
     assert( std::abs( answer[0] - 3.0 ) < std::numeric_limits<double>::epsilon( ) );
-    assert( std::abs( answer[0] - 3.0 ) < std::numeric_limits<double>::epsilon( ) );
     assert( std::abs( answer[1] - 1.0 ) < std::numeric_limits<double>::epsilon( ) );
+    assert( std::abs( answer[2] - 2.0 ) < std::numeric_limits<double>::epsilon( ) );
 }
