@@ -18,6 +18,11 @@
 */
 namespace matrixUtilities
 {
+std::vector<double> solveByGaussElimination( const Matrix& matrix, const std::vector<double>& rhs)
+{
+    // Fill Gauss Elimination
+    return std::vector<double>();
+}
 Matrix matrixSum(const Matrix &m1, const Matrix &m2)
 {
 	assert((m1.numberOfRows() == m2.numberOfRows()) & (m1.numberOfCols() == m2.numberOfCols()) && "The size of rows or columns don't match, recheck input matrices");
