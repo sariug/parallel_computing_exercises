@@ -22,12 +22,54 @@ std::vector<double> solveByGaussElimination( const Matrix& matrix, const std::ve
 {
     // Fill Gauss Elimination
 	std::vector<double> b = rhs;
+	std::vector<double> result;
+	result.reserve(rhs.size());
 	//Assign input matrix
 	Matrix A = matrix;
-	//L and U matrix generator
-	Matrix L(matrix.numberOfRows(), matrix.numberOfCols()), U(matrix.numberOfRows(), matrix.numberOfCols());
-	lu_generator(matrix, L, U);
-	gauss_lu_solver(L, U, b);
+
+	int n = A.numberOfRows();
+	for(int i=0; i<n; i++)
+		for(int j=i+1; j<n;j++)
+			if (abs(A(i, i) < abs(A(j, i))))
+			{
+				for (int k = 0; k < n; k++)
+				{
+					A(i, k) = A(i, k) + A(j, k);
+					A(j, k) = A(i, k) - A(j, k);
+					A(i, k) = A(i, k) - A(j, k);
+
+				}
+
+				b[i] = b[i] + b[j];
+				b[j] = b[i] - b[j];
+				b[i] = b[i] - b[j];
+			}
+
+	std::cout << A;
+
+	//performing Gaussian elimination
+	for(int i=0; i<n;i++)
+		for (int j = i + 1; j < n; j++)
+		{
+			double f = A(j, i) / A(i, i);
+			for (int k = 0; k < n; k++)
+			{
+				A(j, k) = A(j, k) - f * A(i, k);
+			}
+			b[j] = b[j] - f * b[i];
+
+		}
+	//backward substitution
+	for (int i = n - 1; i >= 0; i--)
+	{
+		for (int j = i + 1; j < n; ++j)
+		{
+			b[i] -= (A(i, j)*b[j]);
+		}
+
+		b[i] = b[i] / A(i, i);
+	}
+
 
     return b;
 }
