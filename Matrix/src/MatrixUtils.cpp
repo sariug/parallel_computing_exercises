@@ -21,7 +21,15 @@ namespace matrixUtilities
 std::vector<double> solveByGaussElimination( const Matrix& matrix, const std::vector<double>& rhs)
 {
     // Fill Gauss Elimination
-    return std::vector<double>();
+	std::vector<double> b = rhs;
+	//Assign input matrix
+	Matrix A = matrix;
+	//L and U matrix generator
+	Matrix L(matrix.numberOfRows(), matrix.numberOfCols()), U(matrix.numberOfRows(), matrix.numberOfCols());
+	lu_generator(matrix, L, U);
+	gauss_lu_solver(L, U, b);
+
+    return b;
 }
 Matrix matrixSum(const Matrix &m1, const Matrix &m2)
 {
@@ -143,6 +151,86 @@ void sumThread(const Matrix &m1, const Matrix &m2, int begin, int end, int other
 	for (size_t i = begin; i < end; i++)
 		for (size_t j = 0; j < other_dim; j++)
 			m3(i, j) = m1(i, j) + m2(i, j);
+}
+void lu_generator(const Matrix &matrix, Matrix &L, Matrix &U)
+{
+
+	const int rows = L.numberOfRows();
+	const int cols = L.numberOfCols();
+	Matrix A = matrix;
+
+	for (int i = 0; i < rows; i++)
+	{
+		//Upper triangular matrix
+		for (int k = i; k < rows; k++)
+		{
+			double sum = 0.0;
+			for (int j = 0; j < i; j++)
+			{
+				sum += L(i, j)*U(j, k);
+			}
+
+			U(i, k) = A(i, k) - sum;
+		}
+
+		//Lower triangular matrix
+		for (int k = i; k < rows; k++)
+		{
+			if (i == k)
+				L(i, i) = 1.0;
+			else
+			{
+				double sum = 0.0;
+				for (int j = 0; j < i; j++)
+					sum += L(k, j)*U(j, i);
+
+				//Evaluating for L
+				L(k, i) = (A(k, i) - sum) / U(i, i);
+
+			}
+
+		}
+
+
+
+	}
+
+
+}
+void gauss_lu_solver(const Matrix &L, const Matrix &U, std::vector<double>&b)
+{
+	std::vector<double> z;
+	z.resize(b.size());
+	b[0] = b[0] / L(0, 0);
+	//solve for Ly=z by forward substitution
+	for (int i = 1; i < L.numberOfRows(); i++)
+	{	
+		double sum = 0.0;
+		for (int j = 0; j < i; j++)
+		{
+			sum += L(i, j)*b[j];
+		}
+
+
+		b[i] = (b[i] - sum);
+		
+	}
+
+
+	//Solving for Ux=z by backward substitution
+
+
+	for (int i = L.numberOfRows() - 1; i >= 0; i--)
+	{
+		for (int j = i+1; j < L.numberOfRows(); ++j)
+		{
+			b[i] -= (U(i, j)*b[j]);
+		}
+
+		b[i] = b[i] / U(i, i);
+	}
+
+
 }
 void pad(Matrix &m, int step, double value)
 {
