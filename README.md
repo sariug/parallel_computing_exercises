@@ -64,6 +64,9 @@ Exercises:
 
 **Tutorial 7**:
 
+Exercises:
+- Implement a Gauss solver for Ax=B.
+
 **Tutorial 8**:
 
 **Tutorial 9**:
