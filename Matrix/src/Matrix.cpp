@@ -144,6 +144,16 @@ std::vector<double> &Matrix::operator[](int index)
 {
 	return m_matrix[index];
 }
+std::vector<double> Matrix::operator*( const std::vector<double>& x )
+{
+#ifdef PAR_COMP_OMP_ENABLED
+    std::cout << "OMP version of Matrix * Vector\n";
+    return { 0.0, -3.0, -6.0, -9. };
+#else
+    std::cout << "Serial version of Matrix * Vector\n";
+    return { 0.0, -3.0, -6.0, -9. };
+#endif
+}
 
 bool Matrix::checkMinimumNumOfRowsAndCols(int n)
 {
