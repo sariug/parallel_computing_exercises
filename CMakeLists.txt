@@ -5,6 +5,11 @@ OPTION ( PAR_COMP_TUTORIAL_ENABLE_PREVIOUS_WEEKS "Build previous weeks' solution
 OPTION ( PAR_COMP_TUTORIAL_ENABLE_OMP "Enable OpenMP support" ON )
 
 
+IF ( ${PAR_COMP_TUTORIAL_ENABLE_OMP} )
+    add_definitions(-DPAR_COMP_OMP_ENABLED)
+ENDIF()
+
+
 if (CMAKE_CXX_COMPILER_ID STREQUAL "Clang")
     set (CMAKE_CXX_FLAGS "-std=c++17 -pthread -stdlib=libstdc++ -O3 -march=native ")
     IF ( ${PAR_COMP_TUTORIAL_ENABLE_OMP} )
