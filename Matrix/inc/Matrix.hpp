@@ -35,6 +35,8 @@ public:
     std::vector<double> &operator[](int index);
     const double &operator()(int x, int y) const;
 
+    std::vector<double> operator*( const std::vector<double>& );
+
     // Check functions
     bool checkMinimumNumOfRowsAndCols(int);
 

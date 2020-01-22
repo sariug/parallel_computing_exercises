@@ -144,6 +144,10 @@ std::vector<double> &Matrix::operator[](int index)
 {
 	return m_matrix[index];
 }
+std::vector<double> Matrix::operator*( const std::vector<double>& x )
+{
+    return x;
+}
 
 bool Matrix::checkMinimumNumOfRowsAndCols(int n)
 {
