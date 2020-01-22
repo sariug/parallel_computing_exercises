@@ -1,8 +1,8 @@
-# Time to Develop !
+# Show off your OMP !
 
 ### Tasks :
 
-1) Implement += [operator](https://en.cppreference.com/w/cpp/language/operators) for our Matrix class 
-2) Implement [Matrix-Matrix Multiplication](https://en.wikipedia.org/wiki/Matrix_multiplication#Illustration) 
-3) Implement transpose operation. (you can use a member function transpose() or maybe operator~)
-4) Benchmark current **serial** operations, then implement matrix data structure as a single vector, instead of vector of vectors and benchmark again. Do you see an improvement?
+1) Implement *operator [operator](https://en.cppreference.com/w/cpp/language/operators) for Matrix-Vector multiplication,for our Matrix class, first in serail 
+2) Parallelize it using OMP, try to employ critical sections as little as possible. 
+3) MPI TIME!
+4) Implement MPI ping pong program, continually bounce messages off of each other for some time.
