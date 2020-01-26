@@ -7,6 +7,7 @@
 #include <cmath>
 #include <sstream>
 #include <vector>
+<<<<<<< HEAD
 #include <thread>
 #include <cassert>
 #include "MatrixUtils.hpp"
@@ -20,7 +21,18 @@
 
 */
 
+=======
+#include "Matrix.hpp"
+#include<thread>
+#include <cassert>
+>>>>>>> origin/dharmin_exercise_11_12_19
 
+void test();
+Matrix row_wise_parallel_masked_image_generator(Matrix &input, Matrix &convolution, int number_of_threads);
+Matrix column_wise_parallel_masked_image_generator(Matrix & input, Matrix & convolution, int number_of_threads);
+Matrix cross_wise_parallel_masked_image_generator(Matrix & input, Matrix & convolution, int number_of_threads);
+void threadwise_masking(Matrix & input, Matrix & convolution, int begin, int end, int other_dim, Matrix & result);
+void threadwise_masking_cross(Matrix & input, Matrix & convolution, int begin, int end, int begin_other, int end_other, Matrix & result);
 namespace implementation
 {
 static char filemod[100];
