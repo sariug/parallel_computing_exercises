@@ -13,6 +13,7 @@
 #include <limits>
 #include <string>
 #include <stdexcept>
+#include <cassert>
 
 class Matrix
 {
@@ -27,6 +28,7 @@ public:
     size_t numberOfCols() const;
     size_t numberOfRows() const;
 
+    std::vector<double> sliceAndSerialsRows(size_t begin, size_t end);
     double &operator()(int x, int y);
     friend bool operator==(const Matrix &lhs, const Matrix &rhs);
     Matrix &operator+(Matrix &mat_1);
@@ -38,7 +40,7 @@ public:
     std::vector<double> operator*( const std::vector<double>& );
 
     // Check functions
-    bool checkMinimumNumOfRowsAndCols(int);
+    bool checkMinimumNumOfRowsAndCols(size_t);
 
     friend std::ostream &operator<<(std::ostream &os, Matrix &mat_1);
 

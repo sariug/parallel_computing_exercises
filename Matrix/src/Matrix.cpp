@@ -52,6 +52,32 @@ void Matrix::input_matrix()
 	std::cout << "\n";
 }
 
+// [begin, end ) , includes beginth row but not endth row
+std::vector<double> Matrix::sliceAndSerialsRows(size_t begin, size_t end)
+{
+
+  if ((end <= begin) || (end > numberOfRows())) {
+    throw std::runtime_error("given begin : " + std::to_string(begin) +
+                             " and end : " + std::to_string(end) +
+                             " to sliceAndSerialsRows is incorrect!");
+  }
+
+  const size_t numberOfRowToSerilize = end - begin;
+
+  std::vector<double> serilizedVector{m_matrix[begin].begin(),
+                                      m_matrix[begin].end()};
+
+
+  serilizedVector.reserve((numberOfRowToSerilize - 1) * numberOfCols());
+
+  for (size_t i = begin; i < end - 1; ++i) {
+
+    std::copy(m_matrix[i + 1].begin(), m_matrix[i + 1].end(),
+              std::back_inserter(serilizedVector));
+  }
+  return serilizedVector;
+}
+
 size_t Matrix::numberOfCols() const
 {
 	return m_matrix[0].size();
@@ -116,9 +142,9 @@ Matrix &Matrix::operator+=(const Matrix &mat_1)
 	    throw "invalid entry. matrix dimensions do not match!";
     }
 
-	for (int i = 0; i < nRows; ++i)
+	for (size_t i = 0; i < nRows; ++i)
 	{
-		for (int j = 0; j < nColumns; ++j)
+		for (size_t j = 0; j < nColumns; ++j)
 		{
 			m_matrix[i][j] += mat_1(i, j);
 		}
@@ -155,8 +181,7 @@ std::vector<double> Matrix::operator*( const std::vector<double>& x )
 #endif
 }
 
-bool Matrix::checkMinimumNumOfRowsAndCols(int n)
+bool Matrix::checkMinimumNumOfRowsAndCols(size_t n)
 {
-	if (this->numberOfCols() < n || this->numberOfRows() < n)
-		throw std::runtime_error("Minimum rows or columns should be %d" + std::to_string(n) + ", check input matrix");
+    return (this->numberOfCols() < n || this->numberOfRows() < n) ? false : true; 
 }
