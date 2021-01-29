@@ -18,6 +18,8 @@ namespace matrixUtilities
 	void pad(Matrix & m,int step=1, double value=0.0);
 	void productThread(const Matrix & m1, const Matrix & m2, int begin, int end, int other_dim, Matrix & m3);
 	void sumThread(const Matrix & m1, const Matrix & m2, int begin, int end, int other_dim, Matrix & m3);
+	void lu_generator(const Matrix&, Matrix&, Matrix&);
+	void gauss_lu_solver(const Matrix&, const Matrix&, std::vector<double>&);
     std::vector<double> solveByGaussElimination( const Matrix& matrix, const std::vector<double>& rhs);
 	//additional functions
 	
